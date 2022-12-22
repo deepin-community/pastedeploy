@@ -1,0 +1,9 @@
+Document: python-pastedeploy
+Title: Paste Deployment Documentation
+Author: Ian Bicking
+Abstract: Documentation for Paste Deployment
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/python-pastedeploy/docs/index.html
+Files: /usr/share/doc/python-pastedeploy/docs/*

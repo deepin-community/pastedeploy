@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+export PYBUILD_NAME=pastedeploy
+export PYBUILD_AFTER_INSTALL=rm -rf {destdir}{install_dir}/paste/deploy/paster_templates;\
+       			     rm {destdir}{install_dir}/*.pth;\
+			     rm {destdir}{install_dir}/*/namespace_packages.txt
+
+DOCS=$(shell cd docs &&\
+     find ./ -maxdepth 1 -name "*.rst" -not -name "license.txt" -printf "%p " |\
+     sed "s/.rst//g")
+
+%:
+	dh $@ --buildsystem=pybuild --with=python3
+
+override_dh_installdocs:
+	set -e; for NAME in $(DOCS); do \
+	    rst2html --cloak-email-addresses --no-toc-backlinks "docs/$$NAME.rst" \
+	      > "$(CURDIR)/debian/python3-pastedeploy/usr/share/doc/python3-pastedeploy/docs/$$NAME.html"; \
+	done
+	dh_installdocs
+
+override_dh_installchangelogs:
+	dh_installchangelogs $(CURDIR)/docs/news.rst
