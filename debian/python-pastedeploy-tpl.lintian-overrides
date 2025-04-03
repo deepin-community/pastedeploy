@@ -1,0 +1,4 @@
+# For anming consisty python-pastedeploy-tpl got renamed to the Python3
+# variant. Thus provokes this Lintian warning which can be ignored in this
+# case here. The transitional package will get removed after bookworm.
+python-package-depends-on-package-from-other-python-variant Depends: python3-pastedeploy-tpl

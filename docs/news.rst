@@ -1,6 +1,31 @@
 Paste Deployment News
 =====================
 
+3.1.0 (2023-11-20)
+------------------
+
+* Support Python 3.11 and 3.12.
+
+* Remove deprecated usage of ``inspect.getargspec`` that is no longer
+  supported in Python 3.12.
+
+3.0.1 (2022-10-17)
+------------------
+
+* Fix ``python_requires`` package metadata to support Python 3.7+.
+
+3.0 (2022-10-16)
+----------------
+
+* Drop support for Python 2, as well as 3.4, 3.5, and 3.6.
+
+* Fix a broken compatibility shim that would cause the ConfigParser to fail
+  on Python 3.12 when ``ConfigParser.readfp`` is removed.
+
+* Drop setuptools dependency and start using ``importlib.metadata`` instead.
+
+* Refactor repository into a src folder layout.
+
 2.1.1 (2020-10-12)
 ------------------
 

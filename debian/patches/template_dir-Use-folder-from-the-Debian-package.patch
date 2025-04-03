@@ -1,0 +1,23 @@
+From: SVN-Git Migration <python-modules-team@lists.alioth.debian.org>
+Date: Thu, 8 Oct 2015 10:08:41 -0700
+Subject: template_dir: Use folder from the Debian package
+
+Set the variable _template_dir to an absolute patch which pints to the
+folder from the Debian binary package.
+
+Forwarded: Not-Needed
+---
+ src/paste/deploy/paster_templates.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/src/paste/deploy/paster_templates.py
++++ b/src/paste/deploy/paster_templates.py
+@@ -6,7 +6,7 @@ from paste.script.templates import Templ
+ 
+ 
+ class PasteDeploy(Template):
+-    _template_dir = 'paster_templates/paste_deploy'
++    _template_dir = '/usr/share/paster_templates/paste_deploy'
+     summary = "A web application deployed through paste.deploy"
+ 
+     egg_plugins = ['PasteDeploy']

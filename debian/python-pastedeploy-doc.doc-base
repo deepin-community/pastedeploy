@@ -5,5 +5,5 @@ Abstract: Documentation for Paste Deployment
 Section: Programming/Python
 
 Format: HTML
-Index: /usr/share/doc/python-pastedeploy/docs/index.html
-Files: /usr/share/doc/python-pastedeploy/docs/*
+Index: /usr/share/doc/python-pastedeploy-doc/html/index.html
+Files: /usr/share/doc/python-pastedeploy-doc/html/*

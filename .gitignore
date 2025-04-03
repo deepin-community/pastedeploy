@@ -1,9 +1,14 @@
+.idea
+.vscode
 .coverage
+.coverage.*
 .tox
 *.pyc
-PasteDeploy.egg-info
+src/PasteDeploy.egg-info
 coverage.xml
 htmlcov
 .eggs
 build
 dist
+env*
+tests/fake_packages/FakeApp.egg/EGG-INFO

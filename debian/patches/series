@@ -1,1 +1,3 @@
-01_change_templates_path.dpatch
+template_dir-Use-folder-from-the-Debian-package.patch
+docs-Use-Sphinx-RTD-theme-instead-of-Pylons-one.patch
+docs-Use-local-Python-objects.inv-data-for-intersphinx.patch
