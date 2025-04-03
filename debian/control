@@ -4,29 +4,50 @@ Priority: optional
 Maintainer: Debian Python Team <team+python@tracker.debian.org>
 Uploaders: Ondřej Nový <onovy@debian.org>,
 Build-Depends: debhelper-compat (= 13),
-               dh-python,
+               pybuild-plugin-pyproject,
                python3-all,
+               python3-doc <!nocheck>,
                python3-docutils,
                python3-pygments,
-               python3-pytest,
+               python3-pytest <!nocheck>,
+               python3-pytest-cov <!nocheck>,
                python3-setuptools,
-Standards-Version: 4.5.0
+               python3-sphinx <!nocheck>,
+               python3-sphinx-rtd-theme <!nocheck>,
+Standards-Version: 4.6.2
 Homepage: http://pythonpaste.org/deploy/
 Vcs-Git: https://salsa.debian.org/python-team/packages/pastedeploy.git
 Vcs-Browser: https://salsa.debian.org/python-team/packages/pastedeploy
 Rules-Requires-Root: no
 Testsuite: autopkgtest-pkg-python
 
+Package: python-pastedeploy-doc
+Architecture: all
+Multi-Arch: foreign
+Section: doc
+Depends:
+ ${misc:Depends},
+ ${sphinxdoc:Depends},
+Description: load, configure, and compose WSGI applications and servers (Documentation)
+ Paste Deployment is a system for finding and configuring WSGI applications and
+ servers. For WSGI application consumers it provides a single, simple function
+ (loadapp) for loading a WSGI application from a configuration file or a Python
+ Egg. For WSGI application providers it only asks for a single, simple entry
+ point to your application, so that application users don't need to be exposed
+ to the implementation details of your application.
+ .
+ This package contains the documentation of the library.
+
 Package: python3-pastedeploy
 Architecture: all
-Depends: python-pastedeploy-tpl (= ${binary:Version}),
+Depends: python3-pastedeploy-tpl (= ${binary:Version}),
          python3-paste,
          python3-pkg-resources,
          ${misc:Depends},
          ${python3:Depends},
 Recommends: python3-pastescript,
 Enhances: python3-paste,
-Description: load, configure, and compose WSGI applications and servers - Python 3.x
+Description: load, configure, and compose WSGI applications and servers (Python 3)
  Paste Deployment is a system for finding and configuring WSGI applications and
  servers. For WSGI application consumers it provides a single, simple function
  (loadapp) for loading a WSGI application from a configuration file or a Python
@@ -36,12 +57,16 @@ Description: load, configure, and compose WSGI applications and servers - Python
  .
  This package contains the Python 3.x module.
 
-Package: python-pastedeploy-tpl
+Package: python3-pastedeploy-tpl
 Architecture: all
-Depends: ${misc:Depends},
-Breaks: python-pastedeploy (<< 1.5.0-4),
-Replaces: python-pastedeploy (<< 1.5.0-4),
-Description: load, configure, and compose WSGI applications and servers - templates
+Depends:
+ ${misc:Depends},
+Breaks:
+ python-pastedeploy-tpl (<< 3),
+Replaces:
+ python-pastedeploy-tpl (<< 3),
+Multi-Arch: foreign
+Description: load, configure, compose WSGI applications and servers (Templates)
  Paste Deployment is a system for finding and configuring WSGI applications and
  servers. For WSGI application consumers it provides a single, simple function
  (loadapp) for loading a WSGI application from a configuration file or a Python
@@ -50,3 +75,21 @@ Description: load, configure, and compose WSGI applications and servers - templa
  to the implementation details of your application.
  .
  This package contains the Paste Deploy's paster template.
+
+Package: python-pastedeploy-tpl
+Architecture: all
+Section: oldlibs
+Depends:
+ python3-pastedeploy-tpl (>= ${binary:Version}),
+ ${misc:Depends},
+Multi-Arch: foreign
+Description: load, configure, compose WSGI applications and servers (Transitional package)
+ Paste Deployment is a system for finding and configuring WSGI applications and
+ servers. For WSGI application consumers it provides a single, simple function
+ (loadapp) for loading a WSGI application from a configuration file or a Python
+ Egg. For WSGI application providers it only asks for a single, simple entry
+ point to your application, so that application users don't need to be exposed
+ to the implementation details of your application.
+ .
+ This is a transitional package that pulls in the required package for the
+ old package. It can be safely removed.

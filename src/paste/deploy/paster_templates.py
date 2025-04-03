@@ -4,11 +4,8 @@ import os
 
 from paste.script.templates import Template
 
-from paste.deploy.compat import print_
-
 
 class PasteDeploy(Template):
-
     _template_dir = 'paster_templates/paste_deploy'
     summary = "A web application deployed through paste.deploy"
 
@@ -22,15 +19,23 @@ class PasteDeploy(Template):
                 os.path.join(output_dir, 'setup.py'),
                 'Extra requirements',
                 '%r,\n' % prereq,
-                indent=True)
+                indent=True,
+            )
         command.insert_into_file(
             os.path.join(output_dir, 'setup.py'),
             'Entry points',
-            ('      [paste.app_factory]\n'
-             '      main = %(package)s.wsgiapp:make_app\n') % vars,
-            indent=False)
+            (
+                '      [paste.app_factory]\n'
+                '      main = %(package)s.wsgiapp:make_app\n'
+            )
+            % vars,
+            indent=False,
+        )
         if command.verbose:
-            print_('*' * 72)
-            print_('* Run "paster serve docs/devel_config.ini" to run the sample application')
-            print_('* on http://localhost:8080')
-            print_('*' * 72)
+            print('*' * 72)
+            print(
+                '* Run "paster serve docs/devel_config.ini" to run the sample'
+                ' application'
+            )
+            print('* on http://localhost:8080')
+            print('*' * 72)

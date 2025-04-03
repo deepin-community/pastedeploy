@@ -1,15 +1,18 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: PasteDeploy
-Source: https://pypi.python.org/pypi/PasteDeploy
+Source: https://github.com/Pylons/pastedeploy
+Upstream-Contact: Chris Dent <pylons-discuss@googlegroups.com>
 
 Files: *
 Copyright: (c) 2005-2009 Ian Bicking <ianb@colorstudy.com> and Contributors
+ 2020-2022 Michael Merickel <michael@merickel.org>
 License: Expat
 
 Files: debian/*
 Copyright: (c) 2006-2012, Piotr Ożarowski <piotr@debian.org>
-           (c) 2013, Thomas Goirand <zigo@debian.org>
-           (c) 2016-2020, Ondřej Nový <onovy@debian.org>
+ (c) 2013, Thomas Goirand <zigo@debian.org>
+ (c) 2016-2020, Ondřej Nový <onovy@debian.org>
+ 2022, Carsten Schoenert <c.schoenert@t-online.de>
 License: Expat
 
 License: Expat

@@ -3,7 +3,11 @@
 import inspect
 import sys
 
-from paste.deploy.compat import reraise
+try:
+    import importlib.metadata as importlib_metadata  # noqa F401
+except ImportError:  # pragma: no cover
+    # bw-compat shim for py37
+    import importlib_metadata  # noqa F401
 
 
 def fix_type_error(exc_info, callable, varargs, kwargs):
@@ -22,12 +26,14 @@ def fix_type_error(exc_info, callable, varargs, kwargs):
     """
     if exc_info is None:
         exc_info = sys.exc_info()
-    if (exc_info[0] != TypeError
+    if (
+        exc_info[0] != TypeError
         or str(exc_info[1]).find('arguments') == -1
-        or getattr(exc_info[1], '_type_error_fixed', False)):
+        or getattr(exc_info[1], '_type_error_fixed', False)
+    ):
         return exc_info
     exc_info[1]._type_error_fixed = True
-    argspec = inspect.formatargspec(*inspect.getargspec(callable))
+    argspec = inspect.signature(callable)
     args = ', '.join(map(_short_repr, varargs))
     if kwargs and args:
         args += ', '
@@ -35,7 +41,7 @@ def fix_type_error(exc_info, callable, varargs, kwargs):
         kwargs = sorted(kwargs.items())
         args += ', '.join(['%s=...' % n for n, v in kwargs])
     gotspec = '(%s)' % args
-    msg = '%s; got %s, wanted %s' % (exc_info[1], gotspec, argspec)
+    msg = f'{exc_info[1]}; got {gotspec}, wanted {argspec}'
     exc_info[1].args = (msg,)
     return exc_info
 
@@ -55,7 +61,7 @@ def fix_call(callable, *args, **kw):
         val = callable(*args, **kw)
     except TypeError:
         exc_info = fix_type_error(None, callable, args, kw)
-        reraise(*exc_info)
+        raise exc_info[1] from None
     return val
 
 

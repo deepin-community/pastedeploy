@@ -1,8 +1,8 @@
 # (c) 2005 Ian Bicking and contributors; written for Paste (http://pythonpaste.org)
 # Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 """Paste Configuration Middleware and Objects"""
-import threading
 import re
+import threading
 
 # Loaded lazily
 wsgilib = None
@@ -24,7 +24,7 @@ def local_dict():
         return result
 
 
-class DispatchingConfig(object):
+class DispatchingConfig:
 
     """
     This is a configuration object that can be used globally,
@@ -47,7 +47,7 @@ class DispatchingConfig(object):
             self.dispatching_id = 0
             while 1:
                 self._local_key = 'paste.processconfig_%i' % self.dispatching_id
-                if not self._local_key in local_dict():
+                if self._local_key not in local_dict():
                     break
                 self.dispatching_id += 1
         finally:
@@ -83,9 +83,9 @@ class DispatchingConfig(object):
         popped = lst.pop()
         if conf is not None and popped is not conf:
             raise AssertionError(
-                "The config popped (%s) is not the same as the config "
-                "expected (%s)"
-                % (popped, conf))
+                f"The config popped ({popped}) is not the same as the config "
+                f"expected ({conf})"
+            )
 
     def push_process_config(self, conf):
         """
@@ -101,8 +101,8 @@ class DispatchingConfig(object):
         conf = self.current_conf()
         if conf is None:
             raise AttributeError(
-                "No configuration has been registered for this process "
-                "or thread")
+                "No configuration has been registered for this process or thread"
+            )
         return getattr(conf, attr)
 
     def current_conf(self):
@@ -119,8 +119,8 @@ class DispatchingConfig(object):
         conf = self.current_conf()
         if conf is None:
             raise TypeError(
-                "No configuration has been registered for this process "
-                "or thread")
+                "No configuration has been registered for this process or thread"
+            )
         return conf[key]
 
     def __contains__(self, key):
@@ -132,10 +132,11 @@ class DispatchingConfig(object):
         conf = self.current_conf()
         conf[key] = value
 
+
 CONFIG = DispatchingConfig()
 
 
-class ConfigMiddleware(object):
+class ConfigMiddleware:
 
     """
     A WSGI middleware that adds a ``paste.config`` key to the request
@@ -154,8 +155,6 @@ class ConfigMiddleware(object):
     def __call__(self, environ, start_response):
         global wsgilib
         if wsgilib is None:
-            import pkg_resources
-            pkg_resources.require('Paste')
             from paste import wsgilib
         popped_config = None
         if 'paste.config' in environ:
@@ -180,8 +179,10 @@ class ConfigMiddleware(object):
                 environ['paste.config'] = popped_config
             return app_iter
         else:
+
             def close_config():
                 CONFIG.pop_thread_config(conf)
+
             new_app_iter = wsgilib.add_close(app_iter, close_config)
             return new_app_iter
 
@@ -191,10 +192,11 @@ def make_config_filter(app, global_conf, **local_conf):
     conf.update(local_conf)
     return ConfigMiddleware(app, conf)
 
+
 make_config_middleware = ConfigMiddleware.__doc__
 
 
-class PrefixMiddleware(object):
+class PrefixMiddleware:
     """Translate a given prefix into a SCRIPT_NAME for the filtered
     application.
 
@@ -246,9 +248,16 @@ class PrefixMiddleware(object):
     You can also use ``scheme`` to explicitly set the scheme (like
     ``scheme = https``).
     """
-    def __init__(self, app, global_conf=None, prefix='/',
-                 translate_forwarded_server=True,
-                 force_port=None, scheme=None):
+
+    def __init__(
+        self,
+        app,
+        global_conf=None,
+        prefix='/',
+        translate_forwarded_server=True,
+        force_port=None,
+        scheme=None,
+    ):
         self.app = app
         self.prefix = prefix.rstrip('/')
         self.translate_forwarded_server = translate_forwarded_server
@@ -265,11 +274,17 @@ class PrefixMiddleware(object):
         environ['SCRIPT_NAME'] = self.prefix
         if self.translate_forwarded_server:
             if 'HTTP_X_FORWARDED_SERVER' in environ:
-                environ['SERVER_NAME'] = environ['HTTP_HOST'] = environ.pop('HTTP_X_FORWARDED_SERVER').split(',')[0]
+                environ['SERVER_NAME'] = environ['HTTP_HOST'] = environ.pop(
+                    'HTTP_X_FORWARDED_SERVER'
+                ).split(',')[0]
             if 'HTTP_X_FORWARDED_HOST' in environ:
-                environ['HTTP_HOST'] = environ.pop('HTTP_X_FORWARDED_HOST').split(',')[0]
+                environ['HTTP_HOST'] = environ.pop('HTTP_X_FORWARDED_HOST').split(',')[
+                    0
+                ]
             if 'HTTP_X_FORWARDED_FOR' in environ:
-                environ['REMOTE_ADDR'] = environ.pop('HTTP_X_FORWARDED_FOR').split(',')[0]
+                environ['REMOTE_ADDR'] = environ.pop('HTTP_X_FORWARDED_FOR').split(',')[
+                    0
+                ]
             if 'HTTP_X_FORWARDED_SCHEME' in environ:
                 environ['wsgi.url_scheme'] = environ.pop('HTTP_X_FORWARDED_SCHEME')
             elif 'HTTP_X_FORWARDED_PROTO' in environ:
@@ -277,7 +292,7 @@ class PrefixMiddleware(object):
         if self.force_port is not None:
             host = environ.get('HTTP_HOST', '').split(':', 1)[0]
             if self.force_port:
-                host = '%s:%s' % (host, self.force_port)
+                host = f'{host}:{self.force_port}'
                 environ['SERVER_PORT'] = str(self.force_port)
             else:
                 if environ['wsgi.url_scheme'] == 'http':
@@ -292,14 +307,23 @@ class PrefixMiddleware(object):
 
 
 def make_prefix_middleware(
-    app, global_conf, prefix='/',
+    app,
+    global_conf,
+    prefix='/',
     translate_forwarded_server=True,
-    force_port=None, scheme=None):
+    force_port=None,
+    scheme=None,
+):
     from paste.deploy.converters import asbool
+
     translate_forwarded_server = asbool(translate_forwarded_server)
     return PrefixMiddleware(
-        app, prefix=prefix,
+        app,
+        prefix=prefix,
         translate_forwarded_server=translate_forwarded_server,
-        force_port=force_port, scheme=scheme)
+        force_port=force_port,
+        scheme=scheme,
+    )
+
 
 make_prefix_middleware.__doc__ = PrefixMiddleware.__doc__
